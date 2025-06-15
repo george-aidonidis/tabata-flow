@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.phase {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+}
+
+.time {
+  font-size: 8rem;
+  font-weight: bold;
+}
+
+.controls {
+  margin-top: 2rem;
+}
+
+.controls button {
+  font-size: 1.5rem;
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: 1px solid black;
+  background-color: white;
+}

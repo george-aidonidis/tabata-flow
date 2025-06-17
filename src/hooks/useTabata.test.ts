@@ -1,25 +1,82 @@
-import { describe, it, expect } from "vitest";
-import { useTabata } from "./useTabata"; // This is not ideal, but works for testing the reducer
-import { renderHook } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { renderHook, act } from '@testing-library/react'
+import { useTabata } from './useTabata'
+import type { TimerSettings } from '../types'
 
-// It's tricky to test the reducer directly because it's not exported.
-// We can test it through the hook, but it's not a pure unit test.
-// For this example, we'll proceed with this approach.
+const testSettings: TimerSettings = {
+  prepare: 5,
+  work: 10,
+  rest: 5,
+  rounds: 2,
+}
 
-describe("useTabata hook", () => {
-  it("should initialize with the prepare phase", () => {
-    const { result } = renderHook(() => useTabata());
-    expect(result.current.phase).toBe("prepare");
-    expect(result.current.remaining).toBe(10);
-  });
+describe('useTabata hook', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
 
-  // More tests would go here, e.g., for decrementing, phase transitions, etc.
-  // For example:
-  it("should transition to work phase after prepare", () => {
-    const { result } = renderHook(() => useTabata());
-    for (let i = 0; i < 10; i++) {
-      result.current.start(); // This won't work as expected due to the async nature
-    }
-    // This test is flawed and needs a better way to simulate time.
-  });
-});
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('should initialize with the prepare phase and be running', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+    expect(result.current.state.phase).toBe('prepare')
+    expect(result.current.state.remaining).toBe(5)
+    expect(result.current.isRunning).toBe(true)
+  })
+
+  it('should transition to work phase after prepare phase ends', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+    act(() => {
+      vi.advanceTimersByTime(5000)
+    })
+    expect(result.current.state.phase).toBe('work')
+    expect(result.current.state.remaining).toBe(10)
+  })
+
+  it('should pause and resume the timer', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+
+    // Pause the timer
+    act(() => {
+      result.current.togglePause()
+    })
+    expect(result.current.isRunning).toBe(false)
+
+    // Advance time, but state should not change
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+    expect(result.current.state.remaining).toBe(5)
+
+    // Resume the timer
+    act(() => {
+      result.current.togglePause()
+    })
+    expect(result.current.isRunning).toBe(true)
+
+    // Advance time, and now state should change
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+    expect(result.current.state.remaining).toBe(3)
+  })
+
+  it('should reset the timer to the initial state', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+    expect(result.current.state.remaining).toBe(3)
+
+    act(() => {
+      result.current.reset()
+    })
+
+    expect(result.current.state.phase).toBe('prepare')
+    expect(result.current.state.remaining).toBe(5)
+    expect(result.current.isRunning).toBe(false)
+  })
+})

@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+.grid label {
+  font-weight: bold;
+  justify-self: end;
+}
+
+.grid input {
+  width: 6em;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.container button {
+  font-size: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  border: 1px solid black;
+  background-color: white;
+}

@@ -4,18 +4,26 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  gap: 2rem;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.ringContainer {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.time {
+  position: absolute;
+  font-size: 8rem;
+  font-weight: bold;
 }
 
 .phase {
   font-size: 2rem;
   margin-bottom: 1rem;
   text-transform: capitalize;
-}
-
-.time {
-  font-size: 8rem;
-  font-weight: bold;
 }
 
 .controls {

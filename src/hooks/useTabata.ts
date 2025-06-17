@@ -1,105 +1,90 @@
-import { useReducer, useEffect, useRef, useCallback } from "react";
-import type { TimerState, TimerAction, TimerPhase } from "../types";
+import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
+import type { TimerState, TimerAction, TimerSettings } from '../types'
+import { playSound } from '../utils/audio'
 
-const PREPARE_TIME = 10;
-const WORK_TIME = 20;
-const REST_TIME = 10;
-const NUM_ROUNDS = 8;
-
-const initialState: TimerState = {
-  phase: "prepare",
-  remaining: PREPARE_TIME,
-  round: 1,
-};
-
-function reducer(state: TimerState, action: TimerAction): TimerState {
-  if (state.phase === "finished") {
-    return state;
+function createReducer(settings: TimerSettings) {
+  return function reducer(state: TimerState, action: TimerAction): TimerState {
+    if (state.phase === 'finished') {
+      return state
+    }
+    switch (action.type) {
+      case 'DECREMENT':
+        if (state.remaining > 1) {
+          return { ...state, remaining: state.remaining - 1 }
+        }
+        return { ...state, remaining: 0 }
+      case 'NEXT_PHASE':
+        switch (state.phase) {
+          case 'prepare':
+            return { ...state, phase: 'work', remaining: settings.work }
+          case 'work':
+            return { ...state, phase: 'rest', remaining: settings.rest }
+          case 'rest':
+            if (state.round < settings.rounds) {
+              return {
+                ...state,
+                phase: 'work',
+                remaining: settings.work,
+                round: state.round + 1,
+              }
+            }
+            return { ...state, phase: 'finished', remaining: 0 }
+        }
+        break
+      case 'RESET':
+        return getInitialState(settings)
+    }
+    return state
   }
-  switch (action.type) {
-    case "DECREMENT":
-      if (state.remaining > 1) {
-        return { ...state, remaining: state.remaining - 1 };
-      }
-      return { ...state, remaining: 0 };
-    case "NEXT_PHASE":
-      switch (state.phase) {
-        case "prepare":
-          return { ...state, phase: "work", remaining: WORK_TIME };
-        case "work":
-          return { ...state, phase: "rest", remaining: REST_TIME };
-        case "rest":
-          if (state.round < NUM_ROUNDS) {
-            return {
-              ...state,
-              phase: "work",
-              remaining: WORK_TIME,
-              round: state.round + 1,
-            };
-          }
-          return { ...state, phase: "finished", remaining: 0 };
-      }
-      break;
-    case "RESET":
-      return { ...initialState };
-  }
-  return state;
 }
 
-export function useTabata() {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const workerRef = useRef<Worker | null>(null);
+const getInitialState = (settings: TimerSettings): TimerState => ({
+  phase: 'prepare',
+  remaining: settings.prepare,
+  round: 1,
+})
 
-  const ensureWorker = useCallback(() => {
-    if (workerRef.current === null) {
-      workerRef.current = new Worker(
-        new URL("../workers/timer.ts", import.meta.url),
-        {
-          type: "module",
-        },
-      );
-
-      workerRef.current.onmessage = (e) => {
-        if (e.data === "tick") {
-          dispatch({ type: "DECREMENT" });
-        }
-      };
-    }
-  }, []);
+export function useTabata(settings: TimerSettings) {
+  const initialState = getInitialState(settings)
+  const reducer = useCallback(createReducer(settings), [settings])
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const [isRunning, setIsRunning] = useState(true)
+  const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
-    if (state.remaining === 0 && state.phase !== "finished") {
-      dispatch({ type: "NEXT_PHASE" });
-    }
-  }, [state.remaining, state.phase]);
-
-  useEffect(() => {
-    return () => {
-      if (workerRef.current) {
-        workerRef.current.terminate();
+    if (state.remaining === 0 && state.phase !== 'finished') {
+      dispatch({ type: 'NEXT_PHASE' })
+      if (state.phase === 'rest' && state.round === settings.rounds) {
+        playSound('finish')
+      } else {
+        playSound('start')
       }
-    };
-  }, []);
-
-  const start = useCallback(() => {
-    ensureWorker();
-    if (workerRef.current) {
-      workerRef.current.postMessage("start");
+    } else if (state.remaining > 0 && state.remaining <= 3 && isRunning) {
+      playSound('countdown')
     }
-  }, [ensureWorker]);
+  }, [state.remaining, state.phase, isRunning, settings.rounds, state.round])
 
-  const pause = useCallback(() => {
-    if (workerRef.current) {
-      workerRef.current.postMessage("stop");
+  useEffect(() => {
+    if (isRunning) {
+      timerRef.current = window.setInterval(() => {
+        dispatch({ type: 'DECREMENT' })
+      }, 1000)
     }
-  }, []);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+      }
+    }
+  }, [isRunning])
+
+  const togglePause = useCallback(() => {
+    setIsRunning((prev) => !prev)
+  }, [])
 
   const reset = useCallback(() => {
-    if (workerRef.current) {
-      workerRef.current.postMessage("stop");
-    }
-    dispatch({ type: "RESET" });
-  }, []);
+    setIsRunning(false)
+    dispatch({ type: 'RESET' })
+  }, [])
 
-  return { ...state, start, pause, reset };
+  return { state, isRunning, togglePause, reset }
 }

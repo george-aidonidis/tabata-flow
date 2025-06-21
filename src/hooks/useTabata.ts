@@ -1,8 +1,17 @@
 import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
-import type { TimerState, TimerAction, TimerSettings } from '../types'
+import type { TimerState, TimerAction, Settings } from '../types'
 import { playSound } from '../utils/audio'
 
-function createReducer(settings: TimerSettings) {
+function getInitialState(settings: Settings): TimerState {
+  return {
+    phase: 'prepare',
+    remaining: 5,
+    set: 1,
+    cycle: 1,
+  }
+}
+
+function createReducer(settings: Settings) {
   return function reducer(state: TimerState, action: TimerAction): TimerState {
     if (state.phase === 'finished') {
       return state
@@ -13,38 +22,73 @@ function createReducer(settings: TimerSettings) {
           return { ...state, remaining: state.remaining - 1 }
         }
         return { ...state, remaining: 0 }
-      case 'NEXT_PHASE':
-        switch (state.phase) {
-          case 'prepare':
-            return { ...state, phase: 'work', remaining: settings.work }
-          case 'work':
-            return { ...state, phase: 'rest', remaining: settings.rest }
-          case 'rest':
-            if (state.round < settings.rounds) {
+      case 'NEXT_PHASE': {
+        // PHASE TRANSITION LOGIC
+        const { phase, set, cycle } = state
+        if (phase === 'prepare') {
+          return {
+            ...state,
+            phase: 'work',
+            remaining: settings.work,
+            set: 1,
+            cycle: 1,
+          }
+        }
+        if (phase === 'work') {
+          // If not last set in cycle, go to short break
+          if (set < settings.sets) {
+            return {
+              ...state,
+              phase: 'shortBreak',
+              remaining: settings.shortBreak,
+            }
+          } else {
+            // Last set in cycle: if not last cycle, go to long break, else finish
+            if (cycle < settings.cycles) {
               return {
                 ...state,
-                phase: 'work',
-                remaining: settings.work,
-                round: state.round + 1,
+                phase: 'longBreak',
+                remaining: settings.longBreak,
+              }
+            } else {
+              return {
+                ...state,
+                phase: 'finished',
+                remaining: 0,
               }
             }
-            return { ...state, phase: 'finished', remaining: 0 }
+          }
         }
-        break
+        if (phase === 'shortBreak') {
+          // After short break, next set
+          return {
+            ...state,
+            phase: 'work',
+            remaining: settings.work,
+            set: state.set + 1,
+          }
+        }
+        if (phase === 'longBreak') {
+          // After long break, next cycle
+          return {
+            ...state,
+            phase: 'work',
+            remaining: settings.work,
+            set: 1,
+            cycle: state.cycle + 1,
+          }
+        }
+        return state
+      }
       case 'RESET':
         return getInitialState(settings)
+      default:
+        return state
     }
-    return state
   }
 }
 
-const getInitialState = (settings: TimerSettings): TimerState => ({
-  phase: 'prepare',
-  remaining: settings.prepare,
-  round: 1,
-})
-
-export function useTabata(settings: TimerSettings) {
+export function useTabata(settings: Settings) {
   const initialState = getInitialState(settings)
   const reducer = useCallback(createReducer(settings), [settings])
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -54,25 +98,38 @@ export function useTabata(settings: TimerSettings) {
   useEffect(() => {
     if (state.remaining === 0 && state.phase !== 'finished') {
       dispatch({ type: 'NEXT_PHASE' })
-      if (state.phase === 'rest' && state.round === settings.rounds) {
+      if (
+        (state.phase === 'work' &&
+          state.set === settings.sets &&
+          state.cycle === settings.cycles) ||
+        (state.phase === 'work' &&
+          state.set === settings.sets &&
+          state.cycle < settings.cycles)
+      ) {
         playSound('finish')
-      } else {
+      } else if (state.phase === 'work') {
+        playSound('start')
+      } else if (state.phase === 'shortBreak' || state.phase === 'longBreak') {
         playSound('start')
       }
     } else if (state.remaining > 0 && state.remaining <= 3 && isRunning) {
       playSound('countdown')
     }
-  }, [state.remaining, state.phase, isRunning, settings.rounds, state.round])
+  }, [state.remaining, state.phase, isRunning, settings])
 
   useEffect(() => {
     if (isRunning) {
+      console.log('Starting interval')
       timerRef.current = window.setInterval(() => {
         dispatch({ type: 'DECREMENT' })
       }, 1000)
+    } else {
+      console.log('Clearing interval')
     }
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current)
+        console.log('Cleanup: interval cleared')
       }
     }
   }, [isRunning])

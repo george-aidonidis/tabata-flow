@@ -1,9 +1,15 @@
-export type TimerPhase = 'prepare' | 'work' | 'rest' | 'finished'
+export type TimerPhase =
+  | 'prepare'
+  | 'work'
+  | 'shortBreak'
+  | 'longBreak'
+  | 'finished'
 
 export interface TimerState {
   phase: TimerPhase
   remaining: number
-  round: number
+  set: number
+  cycle: number
 }
 
 export type TimerAction =
@@ -11,9 +17,10 @@ export type TimerAction =
   | { type: 'NEXT_PHASE' }
   | { type: 'RESET' }
 
-export interface TimerSettings {
-  prepare: number
+export type Settings = {
   work: number
-  rest: number
-  rounds: number
+  shortBreak: number
+  sets: number
+  longBreak: number
+  cycles: number
 }

@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: #22525c;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fff;
+  object-fit: contain;
+}
+
+.title {
+  letter-spacing: 1px;
+}

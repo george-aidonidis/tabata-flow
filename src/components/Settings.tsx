@@ -1,15 +1,18 @@
-import { useState } from 'react'
-import { useSettings } from '../context/SettingsContext'
-import type { TimerSettings } from '../types'
+import { useState, useContext } from 'react'
+import { SettingsContext } from '../context/SettingsContext'
+import type { Settings } from '../types'
 import styles from './Settings.module.css'
+import { ProgressCircles } from './ProgressCircles'
 
 interface SettingsProps {
-  onStart: (settings: TimerSettings) => void
+  onStart: (settings: Settings) => void
 }
 
 export function Settings({ onStart }: SettingsProps) {
-  const { settings: initialSettings, saveSettings } = useSettings()
-  const [settings, setSettings] = useState<TimerSettings>(initialSettings)
+  const context = useContext(SettingsContext)
+  if (!context) throw new Error('SettingsContext not found')
+  const { settings: initialSettings, saveSettings } = context
+  const [settings, setSettings] = useState<Settings>(initialSettings)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,55 +20,127 @@ export function Settings({ onStart }: SettingsProps) {
     onStart(settings)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target
-    setSettings((prev) => ({ ...prev, [name]: Number(value) }))
+    setSettings((prev: Settings) => ({ ...prev, [name]: Number(value) }))
   }
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
-      <h2>Settings</h2>
+    <form
+      className={styles.container}
+      data-testid="settings-container"
+      onSubmit={handleSubmit}
+    >
+      <div
+        style={{
+          textAlign: 'center',
+          fontSize: '2.2rem',
+          fontWeight: 700,
+          color: '#2d3a40',
+          marginBottom: '1.2rem',
+          letterSpacing: '0.04em',
+        }}
+      >
+        Prepare
+      </div>
+      <ProgressCircles
+        currentCycle={1}
+        totalCycles={settings.cycles}
+        currentSet={1}
+        totalSets={settings.sets}
+      />
       <div className={styles.grid}>
-        <label htmlFor="prepare">Prepare (s)</label>
-        <input
-          type="number"
-          id="prepare"
-          name="prepare"
-          min="0"
-          max="30"
-          value={settings.prepare}
-          onChange={handleChange}
-        />
-        <label htmlFor="work">Work (s)</label>
-        <input
-          type="number"
-          id="work"
-          name="work"
-          min="1"
-          max="90"
-          value={settings.work}
-          onChange={handleChange}
-        />
-        <label htmlFor="rest">Rest (s)</label>
-        <input
-          type="number"
-          id="rest"
-          name="rest"
-          min="0"
-          max="30"
-          value={settings.rest}
-          onChange={handleChange}
-        />
-        <label htmlFor="rounds">Rounds</label>
-        <input
-          type="number"
-          id="rounds"
-          name="rounds"
-          min="1"
-          max="16"
-          value={settings.rounds}
-          onChange={handleChange}
-        />
+        {/* All settings as cards in a single row */}
+        <div className={styles.card}>
+          <span className={styles.cardLabel}>Cycles</span>
+          <span className={styles.cardSelectWrapper}>
+            <select
+              className={styles.cardSelect}
+              id="cycles"
+              name="cycles"
+              value={settings.cycles}
+              onChange={handleChange}
+            >
+              {[...Array(16)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+          </span>
+        </div>
+        <div className={styles.card}>
+          <span className={styles.cardLabel}>Sets</span>
+          <span className={styles.cardSelectWrapper}>
+            <select
+              className={styles.cardSelect}
+              id="sets"
+              name="sets"
+              value={settings.sets}
+              onChange={handleChange}
+            >
+              {[...Array(8)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+          </span>
+        </div>
+        <div className={styles.card}>
+          <span className={styles.cardLabel}>Work</span>
+          <span className={styles.cardSelectWrapper}>
+            <select
+              className={styles.cardSelect}
+              id="work"
+              name="work"
+              value={settings.work}
+              onChange={handleChange}
+            >
+              {[20, 30, 40, 45, 50, 60, 70, 80, 90].map((v) => (
+                <option key={v} value={v}>
+                  {v} seconds
+                </option>
+              ))}
+            </select>
+          </span>
+        </div>
+        <div className={styles.card}>
+          <span className={styles.cardLabel}>Short Break</span>
+          <span className={styles.cardSelectWrapper}>
+            <select
+              className={styles.cardSelect}
+              id="shortBreak"
+              name="shortBreak"
+              value={settings.shortBreak}
+              onChange={handleChange}
+            >
+              {[0, 5, 10, 15, 20, 25, 30].map((v) => (
+                <option key={v} value={v}>
+                  {v} seconds
+                </option>
+              ))}
+            </select>
+          </span>
+        </div>
+        <div className={styles.card}>
+          <span className={styles.cardLabel}>Long Break</span>
+          <span className={styles.cardSelectWrapper}>
+            <select
+              className={styles.cardSelect}
+              id="longBreak"
+              name="longBreak"
+              value={settings.longBreak}
+              onChange={handleChange}
+            >
+              {[0, 10, 20, 30, 40, 50, 60].map((v) => (
+                <option key={v} value={v}>
+                  {v} seconds
+                </option>
+              ))}
+            </select>
+          </span>
+        </div>
       </div>
       <button type="submit">Start Workout</button>
     </form>

@@ -5,20 +5,21 @@ import {
   useEffect,
   type ReactNode,
 } from 'react'
-import type { TimerSettings } from '../types'
+import type { Settings } from '../types'
 
-const defaultSettings: TimerSettings = {
-  prepare: 10,
+const defaultSettings: Settings = {
   work: 20,
-  rest: 10,
-  rounds: 8,
+  shortBreak: 10,
+  longBreak: 60,
+  sets: 8,
+  cycles: 1,
 }
 
-const loadSettings = (): TimerSettings => {
+const loadSettings = (): Settings => {
   try {
     const stored = localStorage.getItem('tabata-settings')
     if (stored) {
-      return JSON.parse(stored)
+      return { ...defaultSettings, ...JSON.parse(stored) }
     }
   } catch (error) {
     console.error('Failed to load settings from localStorage', error)
@@ -27,16 +28,16 @@ const loadSettings = (): TimerSettings => {
 }
 
 interface SettingsContextValue {
-  settings: TimerSettings
-  saveSettings: (newSettings: TimerSettings) => void
+  settings: Settings
+  saveSettings: (newSettings: Settings) => void
 }
 
-const SettingsContext = createContext<SettingsContextValue | undefined>(
+export const SettingsContext = createContext<SettingsContextValue | undefined>(
   undefined,
 )
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const [settings, setSettings] = useState<TimerSettings>(loadSettings)
+  const [settings, setSettings] = useState<Settings>(loadSettings)
 
   useEffect(() => {
     try {
@@ -46,7 +47,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [settings])
 
-  const saveSettings = (newSettings: TimerSettings) => {
+  const saveSettings = (newSettings: Settings) => {
     setSettings(newSettings)
   }
 

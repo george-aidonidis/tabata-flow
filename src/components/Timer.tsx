@@ -2,6 +2,7 @@ import { useTabata } from '../hooks/useTabata'
 import styles from './Timer.module.css'
 import type { Settings } from '../types'
 import { ProgressRing } from './ProgressRing'
+import { ProgressCircles } from './ProgressCircles'
 
 const PHASE_LABELS: Record<string, string> = {
   prepare: 'PREPARE',
@@ -52,6 +53,15 @@ export function Timer({ settings, onReset }: TimerProps) {
           </div>
         )}
       </div>
+
+      {/* Show progress dots during all phases */}
+      <ProgressCircles
+        currentCycle={cycle}
+        totalCycles={settings.cycles}
+        currentSet={set}
+        totalSets={settings.sets}
+      />
+
       <div className={styles.controls}>
         {phase !== 'finished' && (
           <button onClick={togglePause}>

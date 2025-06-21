@@ -2,7 +2,7 @@ import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
 import type { TimerState, TimerAction, Settings } from '../types'
 import { playSound } from '../utils/audio'
 
-function getInitialState(settings: Settings): TimerState {
+function getInitialState(): TimerState {
   return {
     phase: 'prepare',
     remaining: 5,
@@ -81,7 +81,7 @@ function createReducer(settings: Settings) {
         return state
       }
       case 'RESET':
-        return getInitialState(settings)
+        return getInitialState()
       default:
         return state
     }
@@ -89,8 +89,8 @@ function createReducer(settings: Settings) {
 }
 
 export function useTabata(settings: Settings) {
-  const initialState = getInitialState(settings)
-  const reducer = useCallback(createReducer(settings), [settings])
+  const initialState = getInitialState()
+  const reducer = createReducer(settings)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [isRunning, setIsRunning] = useState(true)
   const timerRef = useRef<number | null>(null)
@@ -115,7 +115,14 @@ export function useTabata(settings: Settings) {
     } else if (state.remaining > 0 && state.remaining <= 3 && isRunning) {
       playSound('countdown')
     }
-  }, [state.remaining, state.phase, isRunning, settings])
+  }, [
+    state.remaining,
+    state.phase,
+    isRunning,
+    settings,
+    state.set,
+    state.cycle,
+  ])
 
   useEffect(() => {
     if (isRunning) {

@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './ProgressCircles.module.css'
 
 interface ProgressCirclesProps {
@@ -15,8 +14,9 @@ export function ProgressCircles({
   totalSets,
 }: ProgressCirclesProps) {
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.row}>
+    <div className={styles.wrapper} data-testid="progress-circles">
+      {/* Always render rounds row but make invisible when totalCycles = 1 to prevent layout shift */}
+      <div className={styles.row} style={{ opacity: totalCycles > 1 ? 1 : 0 }}>
         {[...Array(totalCycles)].map((_, i) => (
           <div
             key={i}
@@ -27,11 +27,10 @@ export function ProgressCircles({
                   ? styles.current
                   : styles.incomplete
             }
-          >
-            {i + 1}
-          </div>
+          />
         ))}
       </div>
+      {/* Always show sets row */}
       <div className={styles.row}>
         {[...Array(totalSets)].map((_, i) => (
           <div
@@ -43,9 +42,7 @@ export function ProgressCircles({
                   ? styles.current
                   : styles.incomplete
             }
-          >
-            {i + 1}
-          </div>
+          />
         ))}
       </div>
     </div>

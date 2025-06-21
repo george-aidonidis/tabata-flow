@@ -8,7 +8,8 @@ const PURE_GOLD = '#D69E2E'
 const PHASE_COLORS: Record<TimerPhase, string> = {
   prepare: PURE_ORANGE,
   work: PURE_RED,
-  rest: PURE_TEAL,
+  shortBreak: PURE_TEAL,
+  longBreak: PURE_TEAL,
   finished: PURE_GOLD,
 }
 

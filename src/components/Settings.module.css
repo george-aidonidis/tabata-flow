@@ -57,12 +57,12 @@ h2 {
   padding: 0.4rem;
   font-size: 1rem;
   border-radius: 1rem;
-  border: 1px solid #b2dfdb;
+  border: none;
   background: #f8fafb;
   color: #22525c;
 }
 
-.container button {
+.container button[type="submit"] {
   font-size: 1.2rem;
   font-weight: bold;
   border-radius: 2rem;
@@ -77,7 +77,7 @@ h2 {
   min-height: 50px;
 }
 
-.container button:hover {
+.container button[type="submit"]:hover {
   background: #e53e3e;
   color: #fff;
 }
@@ -248,7 +248,7 @@ h2 {
     font-size: 1.1rem;
   }
 
-  .container button {
+  .container button[type="submit"] {
     font-size: 1.1rem;
     padding: 0.7rem 2.2rem;
     min-height: 45px;
@@ -308,7 +308,7 @@ h2 {
     font-size: 1rem;
   }
 
-  .container button {
+  .container button[type="submit"] {
     font-size: 1rem;
     padding: 0.6rem 2rem;
     margin-top: 1rem;

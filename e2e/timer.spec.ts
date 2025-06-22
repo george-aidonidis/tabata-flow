@@ -14,11 +14,11 @@ test('the golden path (clock-driven)', async ({ page }) => {
 
   // 3️⃣  Configure settings (medium-length workout so we exercise all phases).
   // Set cycles first so Long Break card becomes visible
-  await page.selectOption('select[name="cycles"]', '2')
-  await page.selectOption('select[name="work"]', '20')
-  await page.selectOption('select[name="shortBreak"]', '5')
-  await page.selectOption('select[name="sets"]', '2')
-  await page.selectOption('select[name="longBreak"]', '10')
+  await page.fill('input[name="cycles"]', '2')
+  await page.fill('input[name="work"]', '0:20')
+  await page.fill('input[name="shortBreak"]', '0:05')
+  await page.fill('input[name="sets"]', '2')
+  await page.fill('input[name="longBreak"]', '0:10')
 
   // 4️⃣  Start the workout ‑ app enters 5-second PREPARE phase.
   await page.getByRole('button', { name: 'Start Workout' }).click()
@@ -92,8 +92,8 @@ test('progress dots behavior with single round', async ({ page }) => {
   await page.goto('/')
 
   // Configure single round workout
-  await page.selectOption('select[name="cycles"]', '1')
-  await page.selectOption('select[name="sets"]', '2')
+  await page.fill('input[name="cycles"]', '1')
+  await page.fill('input[name="sets"]', '2')
 
   // Start workout
   await page.getByRole('button', { name: 'Start Workout' }).click()

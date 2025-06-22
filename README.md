@@ -1,13 +1,12 @@
 <div align="center">
   <img src="./public/tabata-icon.png" alt="Tabata Timer" width="120" height="120">
-  
+
   # Tabata Timer
-  
+
   A modern, responsive Tabata timer built with React, TypeScript, and Vite. Features customizable workout settings, visual progress indicators, and audio cues.
-  
+
   [![Test Suite](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/test.yml/badge.svg)](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/test.yml)
-  [![Deploy](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/deploy.yml/badge.svg)](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/deploy.yml)
-  
+
 </div>
 
 ## ✨ Features
@@ -22,7 +21,7 @@
 
 ### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - npm
 
 ### Installation

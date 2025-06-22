@@ -1,0 +1,144 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  min-width: 100px;
+  height: 70px;
+  flex: 1 1 calc(35% - 0.5rem);
+  max-width: calc(35% - 0.5rem);
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px 0 rgba(34, 82, 92, 0.08);
+  position: relative;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2em;
+  text-align: center;
+  line-height: 1.1;
+  height: 1.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.input {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  border: none;
+  background: transparent;
+  outline: none;
+  text-align: center;
+  width: 2.5rem;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.input:focus {
+  outline: 2px solid #2ec4b6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.decrementButton,
+.incrementButton {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #22525c;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.decrementButton:hover:not(:disabled),
+.incrementButton:hover:not(:disabled) {
+  background: rgba(34, 82, 92, 0.1);
+  color: #22525c;
+}
+
+.decrementButton:active:not(:disabled),
+.incrementButton:active:not(:disabled) {
+  background: rgba(34, 82, 92, 0.2);
+  transform: scale(0.9);
+}
+
+.decrementButton:disabled,
+.incrementButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .container {
+    height: 70px;
+    flex: 1 1 calc(50% - 0.5rem);
+    max-width: calc(50% - 0.5rem);
+    padding: 1rem 0.8rem;
+  }
+
+  .label {
+    font-size: 0.65rem;
+    margin-bottom: 0.15em;
+  }
+
+  .input {
+    font-size: 1.1rem;
+    width: 2rem;
+  }
+
+  .decrementButton,
+  .incrementButton {
+    width: 1.4rem;
+    height: 1.4rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    height: 65px;
+    padding: 0.8rem 0.6rem;
+  }
+
+  .label {
+    font-size: 0.6rem;
+    line-height: 1.1;
+  }
+
+  .input {
+    font-size: 1rem;
+    width: 1.5rem;
+  }
+
+  .decrementButton,
+  .incrementButton {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.6rem;
+  }
+}

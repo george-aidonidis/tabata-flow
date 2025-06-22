@@ -5,7 +5,7 @@
 
   A modern, responsive Tabata timer built with React, TypeScript, and Vite. Features customizable workout settings, visual progress indicators, and audio cues.
 
-  [![Test Suite](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/test.yml/badge.svg)](https://github.com/george-aidonidis/tabata-cursor/actions/workflows/test.yml)
+  [![Test Suite](https://github.com/george-aidonidis/tabata-flow/actions/workflows/test.yml/badge.svg)](https://github.com/george-aidonidis/tabata-flow/actions/workflows/test.yml)
 
 </div>
 

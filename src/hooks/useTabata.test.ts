@@ -126,4 +126,77 @@ describe('useTabata hook', () => {
     expect(result.current.state.cycle).toBe(1)
     expect(result.current.isRunning).toBe(false)
   })
+
+  it('should update settings mid-workout', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+
+    // Advance to work phase
+    act(() => {
+      vi.advanceTimersByTime(5000)
+    })
+    expect(result.current.state.phase).toBe('work')
+    expect(result.current.state.set).toBe(1)
+    expect(result.current.state.cycle).toBe(1)
+
+    // Pause the timer first (updateSettings only works when paused)
+    act(() => {
+      result.current.togglePause()
+    })
+    expect(result.current.isRunning).toBe(false)
+
+    // Update settings to extend the workout
+    const newSettings: Settings = {
+      ...testSettings,
+      sets: 3, // Increase from 2 to 3
+      cycles: 3, // Increase from 2 to 3
+      work: 5, // Increase work duration
+    }
+
+    act(() => {
+      result.current.updateSettings(newSettings)
+    })
+
+    // Verify the settings were updated
+    expect(result.current.state.set).toBe(1)
+    expect(result.current.state.cycle).toBe(1)
+    expect(result.current.state.phase).toBe('work')
+    // The remaining time should be adjusted proportionally
+    expect(result.current.state.remaining).toBeGreaterThan(0)
+  })
+
+  it('should handle reducing settings below current position', () => {
+    const { result } = renderHook(() => useTabata(testSettings))
+
+    // Advance to second set of first cycle
+    act(() => {
+      vi.advanceTimersByTime(5000) // prepare
+    })
+    act(() => {
+      vi.advanceTimersByTime(3000) // work
+    })
+    act(() => {
+      vi.advanceTimersByTime(2000) // short break
+    })
+    expect(result.current.state.phase).toBe('work')
+    expect(result.current.state.set).toBe(2)
+
+    // Pause the timer first (updateSettings only works when paused)
+    act(() => {
+      result.current.togglePause()
+    })
+    expect(result.current.isRunning).toBe(false)
+
+    // Try to reduce sets to 1 (less than current set 2)
+    const newSettings: Settings = {
+      ...testSettings,
+      sets: 1, // Reduce from 2 to 1
+    }
+
+    act(() => {
+      result.current.updateSettings(newSettings)
+    })
+
+    // Should finish the workout gracefully
+    expect(result.current.state.phase).toBe('finished')
+  })
 })

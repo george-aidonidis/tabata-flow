@@ -112,3 +112,109 @@ test('progress dots behavior with single round', async ({ page }) => {
   await page.getByRole('button', { name: /reset/i }).click()
   await expect(page.getByTestId('settings-container')).toBeVisible()
 })
+
+test('pause settings functionality', async ({ page }) => {
+  await page.clock.install()
+  await page.goto('/')
+
+  // Configure a simple workout
+  await page.fill('input[name="cycles"]', '2')
+  await page.fill('input[name="work"]', '0:10')
+  await page.fill('input[name="shortBreak"]', '0:05')
+  await page.fill('input[name="sets"]', '2')
+  await page.fill('input[name="longBreak"]', '0:05')
+
+  // Start workout
+  await page.getByRole('button', { name: 'Start Workout' }).click()
+
+  // Skip prepare phase and get to work phase
+  await page.clock.runFor('05')
+  await expect(page.getByTestId('phase-label')).toHaveText(/work/i)
+
+  // Pause the workout
+  await page.getByRole('button', { name: /pause/i }).click()
+
+  // Verify pause settings are visible
+  await expect(page.getByTestId('pause-settings')).toBeVisible()
+
+  // Verify we can see the current settings within pause settings
+  await expect(
+    page.getByTestId('pause-settings').locator('input[name="cycles"]'),
+  ).toHaveValue('2')
+  await expect(
+    page.getByTestId('pause-settings').locator('input[name="sets"]'),
+  ).toHaveValue('2')
+
+  // Try to extend the workout (changes are applied automatically)
+  const cyclesInput = page
+    .getByTestId('pause-settings')
+    .locator('input[name="cycles"]')
+  const setsInput = page
+    .getByTestId('pause-settings')
+    .locator('input[name="sets"]')
+  await cyclesInput.fill('3')
+  await cyclesInput.blur()
+  await setsInput.fill('3')
+  await setsInput.blur()
+
+  // Resume workout
+  await page.getByRole('button', { name: /resume/i }).click()
+
+  // Verify pause settings are hidden
+  await expect(page.getByTestId('pause-settings')).not.toBeVisible()
+
+  // Continue workout and verify extended settings work
+  await page.clock.runFor('10') // finish current work
+  await expect(page.getByTestId('phase-label')).toHaveText(/rest/i)
+
+  // Reset
+  await page.getByRole('button', { name: /reset/i }).click()
+  await expect(page.getByTestId('settings-container')).toBeVisible()
+})
+
+test('pause settings warning messages', async ({ page }) => {
+  await page.clock.install()
+  await page.goto('/')
+
+  // Configure a simple workout
+  await page.fill('input[name="cycles"]', '2')
+  await page.fill('input[name="sets"]', '2')
+
+  // Start workout
+  await page.getByRole('button', { name: 'Start Workout' }).click()
+
+  // Skip prepare phase
+  await page.clock.runFor('05')
+
+  // Pause the workout
+  await page.getByRole('button', { name: /pause/i }).click()
+
+  // Extend only rounds - should show rounds warning
+  const cyclesInput = page
+    .getByTestId('pause-settings')
+    .locator('input[name="cycles"]')
+  await cyclesInput.fill('3')
+  await cyclesInput.blur()
+  await expect(page.getByText(/adding rounds will extend/i)).toBeVisible()
+
+  // Reset and extend only sets
+  await cyclesInput.fill('2')
+  await cyclesInput.blur()
+  const setsInput = page
+    .getByTestId('pause-settings')
+    .locator('input[name="sets"]')
+  await setsInput.fill('3')
+  await setsInput.blur()
+  await expect(page.getByText(/adding sets will extend/i)).toBeVisible()
+
+  // Extend both - should show combined warning
+  await cyclesInput.fill('3')
+  await cyclesInput.blur()
+  await expect(
+    page.getByText(/adding rounds and sets will extend/i),
+  ).toBeVisible()
+
+  // Reset
+  await page.getByRole('button', { name: /reset/i }).click()
+  await expect(page.getByTestId('settings-container')).toBeVisible()
+})

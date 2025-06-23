@@ -12,7 +12,7 @@ function getAudioContext(): AudioContext | null {
   return audioContext
 }
 
-export function playSound(type: 'countdown' | 'start' | 'finish') {
+export function playSound(type: 'countdown' | 'work' | 'rest' | 'finish') {
   const context = getAudioContext()
   if (!context) return
 
@@ -31,9 +31,15 @@ export function playSound(type: 'countdown' | 'start' | 'finish') {
       oscillator.frequency.value = 440 // A4
       gainNode.gain.setValueAtTime(0.5, context.currentTime)
       break
-    case 'start':
-      oscillator.frequency.value = 880 // A5
+    case 'work':
+      // Higher, more energetic tone for work phase
+      oscillator.frequency.value = 880 // A5 - high pitch for activity
       gainNode.gain.setValueAtTime(0.7, context.currentTime)
+      break
+    case 'rest':
+      // Lower, more relaxed tone for rest phase
+      oscillator.frequency.value = 330 // E4 - lower pitch for rest
+      gainNode.gain.setValueAtTime(0.6, context.currentTime)
       break
     case 'finish':
       oscillator.frequency.value = 220 // A3

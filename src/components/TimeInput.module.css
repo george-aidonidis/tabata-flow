@@ -6,11 +6,11 @@
   background: #f8fafc;
   border: none;
   border-radius: 8px;
-  padding: 1rem 1.2rem;
-  min-width: 100px;
+  padding: 1rem 1.5rem;
+  min-width: 120px;
   height: 70px;
-  flex: 1 1 calc(35% - 0.5rem);
-  max-width: calc(35% - 0.5rem);
+  flex: 1 1 calc(40% - 0.5rem);
+  max-width: calc(40% - 0.5rem);
   box-sizing: border-box;
   box-shadow: 0 1px 3px 0 rgba(34, 82, 92, 0.08);
   position: relative;

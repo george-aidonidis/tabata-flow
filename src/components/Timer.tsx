@@ -3,6 +3,7 @@ import styles from './Timer.module.css'
 import type { Settings } from '../types'
 import { ProgressRing } from './ProgressRing'
 import { ProgressCircles } from './ProgressCircles'
+import { PauseSettings } from './PauseSettings'
 
 const PHASE_LABELS: Record<string, string> = {
   prepare: 'PREPARE',
@@ -18,7 +19,14 @@ interface TimerProps {
 }
 
 export function Timer({ settings, onReset }: TimerProps) {
-  const { state, isRunning, togglePause, reset } = useTabata(settings)
+  const {
+    state,
+    settings: currentSettings,
+    isRunning,
+    togglePause,
+    reset,
+    updateSettings,
+  } = useTabata(settings)
   const { phase, remaining, set, cycle } = state
 
   const handleReset = () => {
@@ -28,9 +36,10 @@ export function Timer({ settings, onReset }: TimerProps) {
 
   let totalTimeForPhase = 1
   if (phase === 'prepare') totalTimeForPhase = 5
-  else if (phase === 'work') totalTimeForPhase = settings.work
-  else if (phase === 'shortBreak') totalTimeForPhase = settings.shortBreak
-  else if (phase === 'longBreak') totalTimeForPhase = settings.longBreak
+  else if (phase === 'work') totalTimeForPhase = currentSettings.work
+  else if (phase === 'shortBreak')
+    totalTimeForPhase = currentSettings.shortBreak
+  else if (phase === 'longBreak') totalTimeForPhase = currentSettings.longBreak
 
   const progress =
     totalTimeForPhase > 0
@@ -49,7 +58,7 @@ export function Timer({ settings, onReset }: TimerProps) {
         </div>
         {phase !== 'prepare' && phase !== 'finished' && (
           <div className={styles.setCycleBelow}>
-            {`Set ${set}/${settings.sets} | Round ${cycle}/${settings.cycles}`}
+            {`Set ${set}/${currentSettings.sets} | Round ${cycle}/${currentSettings.cycles}`}
           </div>
         )}
       </div>
@@ -57,9 +66,9 @@ export function Timer({ settings, onReset }: TimerProps) {
       {/* Show progress dots during all phases */}
       <ProgressCircles
         currentCycle={cycle}
-        totalCycles={settings.cycles}
+        totalCycles={currentSettings.cycles}
         currentSet={set}
-        totalSets={settings.sets}
+        totalSets={currentSettings.sets}
       />
 
       <div className={styles.controls}>
@@ -69,6 +78,18 @@ export function Timer({ settings, onReset }: TimerProps) {
           </button>
         )}
         <button onClick={handleReset}>Reset</button>
+      </div>
+
+      {/* Reserved space for pause settings to prevent layout shift */}
+      <div className={styles.pauseSettingsContainer}>
+        {!isRunning && phase !== 'prepare' && phase !== 'finished' && (
+          <PauseSettings
+            settings={currentSettings}
+            onUpdateSettings={updateSettings}
+            currentCycle={cycle}
+            currentSet={set}
+          />
+        )}
       </div>
     </div>
   )

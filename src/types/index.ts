@@ -16,6 +16,7 @@ export type TimerAction =
   | { type: 'DECREMENT' }
   | { type: 'NEXT_PHASE' }
   | { type: 'RESET' }
+  | { type: 'UPDATE_SETTINGS'; payload: Settings }
 
 export type Settings = {
   work: number

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 70vh;
-  gap: 2rem;
+  gap: 1rem;
   font-family: inherit;
 }
 
@@ -86,6 +86,13 @@
 .controls button:hover {
   background: #e53e3e;
   color: #fff;
+}
+
+.volumeControlContainer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pauseSettingsContainer {

@@ -4,6 +4,7 @@ import type { Settings } from '../types'
 import { ProgressRing } from './ProgressRing'
 import { ProgressCircles } from './ProgressCircles'
 import { PauseSettings } from './PauseSettings'
+import { VolumeControl } from './VolumeControl'
 
 const PHASE_LABELS: Record<string, string> = {
   prepare: 'PREPARE',
@@ -78,6 +79,10 @@ export function Timer({ settings, onReset }: TimerProps) {
           </button>
         )}
         <button onClick={handleReset}>Reset</button>
+      </div>
+
+      <div className={styles.volumeControlContainer}>
+        <VolumeControl />
       </div>
 
       {/* Reserved space for pause settings to prevent layout shift */}

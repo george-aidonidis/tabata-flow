@@ -15,6 +15,8 @@ self.addEventListener('install', (event) => {
       .then((cache) => cache.addAll(STATIC_ASSETS))
       .then(() => self.skipWaiting()), // Force activation
   )
+  // Force the waiting service worker to become the active service worker
+  self.skipWaiting()
 })
 
 // Activate event - clean up old caches
@@ -35,6 +37,8 @@ self.addEventListener('activate', (event) => {
       })
       .then(() => self.clients.claim()), // Take control immediately
   )
+  // Ensure the service worker takes control immediately
+  self.clients.claim()
 })
 
 // Fetch event - handle different request types

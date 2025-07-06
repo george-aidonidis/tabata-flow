@@ -1,0 +1,78 @@
+.upgradeBanner {
+  background: linear-gradient(135deg, rgba(46, 196, 182, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+  border-top: 1px solid rgba(46, 196, 182, 0.2);
+  padding: 12px 16px;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+	display: flex;
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.upgradeBannerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.upgradeBannerText {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.upgradeBannerText strong {
+  color: #2ec4b6;
+  font-weight: 600;
+}
+
+.upgradeBannerButton {
+  background: linear-gradient(135deg, #2ec4b6 0%, #26b3a6 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(46, 196, 182, 0.3);
+}
+
+.upgradeBannerButton:hover {
+  background: linear-gradient(135deg, #26b3a6 0%, #229d91 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 196, 182, 0.4);
+}
+
+.upgradeBannerButton:active {
+  transform: translateY(0);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .upgradeBanner {
+    padding: 10px 12px;
+  }
+
+  .upgradeBannerContent {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .upgradeBannerText {
+    font-size: 0.8rem;
+  }
+
+  .upgradeBannerButton {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

@@ -15,7 +15,6 @@ This is the most popular and often most successful model for utility apps. You o
 *   **The Core Timer:** The fantastic "Rounds of Sets" timer you've already built. Allow users to set work time, rest time, number of sets, and number of rounds.
 *   **Limited Presets:** Allow users to save 1 or 2 of their favorite workout configurations. This lets them see the value of saving workouts.
 *   **Basic Customization:** Standard sounds (beep, bell) and a default color theme.
-*   **Non-Intrusive Ads:** A small, static banner ad at the bottom of the screen. This gently encourages upgrading to an ad-free experience without ruining the core functionality.
 
 #### **What's in the PREMIUM (Pro/Plus) Version:**
 *(This can be a one-time purchase or a recurring subscription - more on that below)*

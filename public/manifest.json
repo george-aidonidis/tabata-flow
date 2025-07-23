@@ -11,23 +11,23 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/tabata-icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "/tabata-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/tabata-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/tabata-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     }
   ],
   "screenshots": [
     {
-      "src": "/tabata-icon.png",
-      "sizes": "540x720",
-      "type": "image/png",
+      "src": "/tabata-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "form_factor": "narrow"
     }
   ],
@@ -39,8 +39,8 @@
       "url": "/",
       "icons": [
         {
-          "src": "/tabata-icon.png",
-          "sizes": "192x192"
+          "src": "/tabata-icon.svg",
+          "sizes": "any"
         }
       ]
     }

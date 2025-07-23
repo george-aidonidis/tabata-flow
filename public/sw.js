@@ -4,7 +4,7 @@ const STATIC_CACHE = `tabata-static-${CACHE_VERSION}`
 const DYNAMIC_CACHE = `tabata-dynamic-${CACHE_VERSION}`
 
 // Assets to cache on install
-const STATIC_ASSETS = ['/', '/manifest.json', '/tabata-icon.png', '/vite.svg']
+const STATIC_ASSETS = ['/', '/manifest.json', '/tabata-icon.svg', '/vite.svg']
 
 // Install event
 self.addEventListener('install', (event) => {

@@ -189,7 +189,7 @@ export function useTabata(initialSettings: Settings) {
         playSound('work')
       }
     } else if (state.remaining > 0 && state.remaining <= 3 && isRunning) {
-      playSound('countdown')
+      playSound('countdown', 0.1)
     }
   }, [
     state.remaining,

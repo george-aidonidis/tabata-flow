@@ -2,6 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useTabata } from './useTabata'
 import type { Settings } from '../types'
+import * as audio from '../utils/audio'
+
+// Mock the audio module
+vi.mock('../utils/audio', () => ({
+  playSound: vi.fn(),
+  setVolume: vi.fn(),
+  getVolume: vi.fn(),
+  initAudio: vi.fn(),
+  cleanupAudio: vi.fn(),
+}))
 
 const testSettings: Settings = {
   work: 3,
@@ -12,8 +22,11 @@ const testSettings: Settings = {
 }
 
 describe('useTabata hook', () => {
+  const mockPlaySound = vi.mocked(audio.playSound)
+
   beforeEach(() => {
     vi.useFakeTimers()
+    vi.clearAllMocks()
   })
 
   afterEach(() => {
@@ -198,5 +211,63 @@ describe('useTabata hook', () => {
 
     // Should finish the workout gracefully
     expect(result.current.state.phase).toBe('finished')
+  })
+
+  it('should play sounds for different scenarios', () => {
+    renderHook(() => useTabata(testSettings))
+
+    // Test countdown sound (remaining <= 3)
+    act(() => {
+      vi.advanceTimersByTime(2000) // advance to 3 seconds remaining
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('countdown', 0.1)
+
+    // Test phase transition: prepare → work
+    act(() => {
+      vi.advanceTimersByTime(3000) // complete prepare phase
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('work')
+
+    // Test phase transition: work → rest (not final set)
+    act(() => {
+      vi.advanceTimersByTime(3000) // complete work phase
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('rest')
+
+    // Test phase transition: rest → work
+    act(() => {
+      vi.advanceTimersByTime(2000) // complete short break
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('work')
+
+    // Test phase transition: work → long break (end of set)
+    act(() => {
+      vi.advanceTimersByTime(3000) // complete work phase
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('rest')
+
+    // Test phase transition: long break → work (next cycle)
+    act(() => {
+      vi.advanceTimersByTime(4000) // complete long break
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('work')
+
+    // Test phase transition: work → rest (not final set of final cycle)
+    act(() => {
+      vi.advanceTimersByTime(3000) // complete work phase
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('rest')
+
+    // Test phase transition: rest → work
+    act(() => {
+      vi.advanceTimersByTime(2000) // complete short break
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('work')
+
+    // Test phase transition: work → finish (final set of final cycle)
+    act(() => {
+      vi.advanceTimersByTime(3000) // complete work phase
+    })
+    expect(mockPlaySound).toHaveBeenCalledWith('finish')
   })
 })

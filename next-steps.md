@@ -19,18 +19,21 @@ This is the most popular and often most successful model for utility apps. You o
 #### **What's in the PREMIUM (Pro/Plus) Version:**
 *(This can be a one-time purchase or a recurring subscription - more on that below)*
 
-*   **Ad-Free Experience:** The most straightforward and common reason for users to upgrade.
-*   **Unlimited Workout Presets:** This is a major selling point for serious users who have different routines for different days (e.g., "Leg Day HIIT," "Cardio Blast," "Core Burner").
 *   **Advanced Sound Customization:**
     *   **Sound Packs:** Offer different sound themes (e.g., "Zen Garden," "Gym Bell," "Retro Arcade").
     *   **Voice Cues:** A voice that announces "Work!", "Rest!", "Round 2", "Halfway there!", and counts down the last 3 seconds. This is a huge quality-of-life improvement as users don't have to look at the screen.
-*   **Advanced Visual Customization:**
-    *   **Color Themes:** Let users change the app's color scheme to match their mood or workout gear.
+*   **Cloud Sync:** Sync saved presets and workout history across devices (e.g., between the web app and a future mobile app).
+*   **Workout Library:** Offer a library of pre-built workouts based on your timer's structure (e.g., "15-Minute Full Body Blast," "Beginner's Round Timer").
 *   **Workout Log & Statistics:**
     *   Automatically log completed workouts in a calendar view.
     *   Show stats like "Total time worked out this week," "Longest streak," etc. This gamification keeps users engaged and motivated.
-*   **Cloud Sync:** Sync saved presets and workout history across devices (e.g., between the web app and a future mobile app).
-*   **Workout Library:** Offer a library of pre-built workouts based on your timer's structure (e.g., "15-Minute Full Body Blast," "Beginner's Round Timer").
+*   **Advanced Visual Customization:**
+    *   **Color Themes:** Let users change the app's color scheme to match their mood or workout gear.
+*   **Music Integration:**
+    *   **Spotify Integration:** Connect with Spotify Premium accounts to control music playback during workouts. Automatically pause/resume music during rest periods, or keep it playing throughout. Users can create workout playlists that sync with their timer routines.
+    *   **Apple Music Integration:** Similar functionality for Apple Music subscribers using MusicKit JS.
+    *   **Smart Audio Mixing:** Automatically duck music volume during voice cues and timer sounds, then restore to full volume.
+    *   **Workout Playlists:** Curated playlists that match the intensity and duration of specific workout types (e.g., "High-Intensity 20min," "Cool Down Stretch").
 
 ---
 
@@ -46,9 +49,6 @@ These are alternatives or complements to the Freemium model.
     *   **Pros:** Very easy to implement, feels friendly and non-aggressive.
     *   **Cons:** Unreliable revenue. Only a tiny fraction of users will donate. Best for the very early days while you build out premium features.
 
-*   **Rewarded Ads:** "Watch a 30-second ad to unlock a premium feature for one workout."
-    *   **Pros:** A great way for free users to "try before they buy" premium features like a special sound pack. It's a user-initiated, less intrusive form of advertising.
-    *   **Cons:** Can be complex to implement.
 
 ---
 
@@ -82,7 +82,7 @@ You can't build all of this at once. Here’s a practical path:
     *   **Goal:** Convert your most dedicated early users into paying customers.
 
 3.  **Phase 3: Enhance the Ecosystem (3-9 months later)**
-    *   **Product:** Build out the more complex premium features like **Voice Cues**, **Workout Logs**, and **Cloud Sync**.
+    *   **Product:** Build out the more complex premium features like **Voice Cues**, **Workout Logs**, **Cloud Sync**, and **Music Integration** (Spotify/Apple Music).
     *   **Monetization:** These new features will make the Premium offering much more compelling, justifying the price and attracting new paying users.
     *   **Goal:** Become the go-to timer for serious interval training.
 

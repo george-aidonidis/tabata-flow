@@ -4,7 +4,7 @@ export function Header() {
   return (
     <header className={styles.header}>
       <img
-        src="/tabata-icon.png"
+        src="/tabata-icon.svg"
         alt="Tabata Timer Icon"
         className={styles.icon}
       />

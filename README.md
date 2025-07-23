@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/tabata-icon.png" alt="Tabata Timer" width="120" height="120">
+  <img src="./public/tabata-icon.svg" alt="Tabata Timer" width="120" height="120">
 
   # Tabata Timer
 

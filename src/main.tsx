@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { SettingsProvider } from './context/SettingsContext.tsx'
-import { Analytics } from '@vercel/analytics/react'
 import { PostHogProvider } from 'posthog-js/react'
 
 createRoot(document.getElementById('root')!).render(
@@ -17,7 +16,6 @@ createRoot(document.getElementById('root')!).render(
         debug: import.meta.env.MODE === 'development',
       }}
     >
-      <Analytics />
       <SettingsProvider>
         <App />
       </SettingsProvider>

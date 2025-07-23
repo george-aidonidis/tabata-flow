@@ -19,6 +19,7 @@ This is the most popular and often most successful model for utility apps. You o
 #### **What's in the PREMIUM (Pro/Plus) Version:**
 *(This can be a one-time purchase or a recurring subscription - more on that below)*
 
+*   **Unlimited Workout Presets:** This is a major selling point for serious users who have different routines for different days (e.g., "Leg Day HIIT," "Cardio Blast," "Core Burner").
 *   **Advanced Sound Customization:**
     *   **Sound Packs:** Offer different sound themes (e.g., "Zen Garden," "Gym Bell," "Retro Arcade").
     *   **Voice Cues:** A voice that announces "Work!", "Rest!", "Round 2", "Halfway there!", and counts down the last 3 seconds. This is a huge quality-of-life improvement as users don't have to look at the screen.

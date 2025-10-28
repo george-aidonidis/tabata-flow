@@ -59,20 +59,30 @@
 
 .decrementButton,
 .incrementButton {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border: none;
   background: transparent;
-  border-radius: 4px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: #22525c;
   transition: all 0.2s;
   user-select: none;
+  /* Increase touch target without affecting layout */
+  position: relative;
+}
+
+.decrementButton::before,
+.incrementButton::before {
+  content: '';
+  position: absolute;
+  inset: -0.25rem;
+  /* This creates a larger invisible touch area */
 }
 
 .decrementButton:hover:not(:disabled),
@@ -113,9 +123,14 @@
 
   .decrementButton,
   .incrementButton {
-    width: 1.4rem;
-    height: 1.4rem;
-    font-size: 0.7rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+  }
+
+  .decrementButton::before,
+  .incrementButton::before {
+    inset: -0.4rem;
   }
 }
 
@@ -137,8 +152,13 @@
 
   .decrementButton,
   .incrementButton {
-    width: 1.2rem;
-    height: 1.2rem;
-    font-size: 0.6rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .decrementButton::before,
+  .incrementButton::before {
+    inset: -0.5rem;
   }
 }
